@@ -735,16 +735,20 @@ MonoBehaviour:
     Seed: 0
     Map:
       Id:
-        Value: 337807657631030246
+        Value: 305189555523013989
     SimulationConfig:
       Id:
-        Value: 2111800661582129408
+        Value: 503884164786470988
     SystemsConfig:
       Id:
-        Value: 3021223483500348420
+        Value: 329302005840399745
   UseRandomSeed: 0
   SessionConfig: {fileID: 0}
-  LocalPlayers: []
+  LocalPlayers:
+  - PlayerAvatar:
+      Id:
+        Value: 0
+    PlayerNickname: 
   MaxPlayerCount: 0
   SimulationSpeedMultiplier: 1
   DisplaySaveAndReloadButton: 0
@@ -873,7 +877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1336622851}
-  - component: {fileID: 1336622850}
+  - component: {fileID: 1336622852}
   m_Layer: 0
   m_Name: QuantumDebugInput
   m_TagString: Untagged
@@ -881,18 +885,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1336622850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336622849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d80a0dde3922e0f47b2e12ce66a4cfdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1336622851
 Transform:
   m_ObjectHideFlags: 0
@@ -908,6 +900,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1336622852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336622849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18d16246d47cbc0419f8794a568ddd4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1379221147
 GameObject:
   m_ObjectHideFlags: 0

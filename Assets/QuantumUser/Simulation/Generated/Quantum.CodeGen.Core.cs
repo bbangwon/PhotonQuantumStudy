@@ -51,6 +51,10 @@ namespace Quantum {
   
   [System.FlagsAttribute()]
   public enum InputButtons : int {
+    Left = 1 << 0,
+    Right = 1 << 1,
+    Up = 1 << 2,
+    Fire = 1 << 3,
   }
   public static unsafe partial class FlagsExtensions {
     public static Boolean IsFlagSet(this InputButtons self, InputButtons flag) {
@@ -401,13 +405,23 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Input {
-    public const Int32 SIZE = 4;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 4;
+    [FieldOffset(12)]
+    public Button Left;
+    [FieldOffset(24)]
+    public Button Right;
+    [FieldOffset(36)]
+    public Button Up;
     [FieldOffset(0)]
-    private fixed Byte _alignment_padding_[4];
+    public Button Fire;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 19249;
+        hash = hash * 31 + Left.GetHashCode();
+        hash = hash * 31 + Right.GetHashCode();
+        hash = hash * 31 + Up.GetHashCode();
+        hash = hash * 31 + Fire.GetHashCode();
         return hash;
       }
     }
@@ -416,21 +430,33 @@ namespace Quantum {
     }
     public Boolean IsDown(InputButtons button) {
       switch (button) {
+        case InputButtons.Left: return Left.IsDown;
+        case InputButtons.Right: return Right.IsDown;
+        case InputButtons.Up: return Up.IsDown;
+        case InputButtons.Fire: return Fire.IsDown;
         default: return false;
       }
     }
     public Boolean WasPressed(InputButtons button) {
       switch (button) {
+        case InputButtons.Left: return Left.WasPressed;
+        case InputButtons.Right: return Right.WasPressed;
+        case InputButtons.Up: return Up.WasPressed;
+        case InputButtons.Fire: return Fire.WasPressed;
         default: return false;
       }
     }
     static partial void SerializeCodeGen(void* ptr, FrameSerializer serializer) {
         var p = (Input*)ptr;
+        Button.Serialize(&p->Fire, serializer);
+        Button.Serialize(&p->Left, serializer);
+        Button.Serialize(&p->Right, serializer);
+        Button.Serialize(&p->Up, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 592;
+    public const Int32 SIZE = 856;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public AssetRef<Map> Map;
@@ -454,12 +480,12 @@ namespace Quantum {
     public Int32 PlayerConnectedCount;
     [FieldOffset(556)]
     [FramePrinter.FixedArrayAttribute(typeof(Input), 6)]
-    private fixed Byte _input_[24];
-    [FieldOffset(584)]
+    private fixed Byte _input_[288];
+    [FieldOffset(848)]
     public BitSet6 PlayerLastConnectionState;
     public FixedArray<Input> input {
       get {
-        fixed (byte* p = _input_) { return new FixedArray<Input>(p, 4, 6); }
+        fixed (byte* p = _input_) { return new FixedArray<Input>(p, 48, 6); }
       }
     }
     public override Int32 GetHashCode() {
@@ -554,6 +580,10 @@ namespace Quantum {
     partial void SetPlayerInputCodeGen(PlayerRef player, Input input) {
       if ((int)player >= (int)_globals->input.Length) { throw new System.ArgumentOutOfRangeException("player"); }
       var i = _globals->input.GetPointer(player);
+      i->Left = i->Left.Update(this.Number, input.Left);
+      i->Right = i->Right.Update(this.Number, input.Right);
+      i->Up = i->Up.Update(this.Number, input.Up);
+      i->Fire = i->Fire.Update(this.Number, input.Fire);
     }
     public Input* GetPlayerInput(PlayerRef player) {
       if ((int)player >= (int)_globals->input.Length) { throw new System.ArgumentOutOfRangeException("player"); }

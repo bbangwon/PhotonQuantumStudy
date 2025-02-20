@@ -5,6 +5,7 @@ namespace Quantum.Asteroids
 {
     // Preserve 빌드에서 제외되지 않도록 보존
     // unsafe 키워드를 사용하여 포인터를 사용할 수 있도록 함
+    // SystemMainThreadFilter를 상속 : Filter를 가지고 있는 엔티티를 가져와서 매 프레임 업데이트
     [Preserve]  
     public unsafe class AsteriodsShipSystem : SystemMainThreadFilter<AsteriodsShipSystem.Filter>
     {
@@ -20,7 +21,21 @@ namespace Quantum.Asteroids
         // 프레임 마다 filter 엔티티를 하나 가져와 업데이트
         public override void Update(Frame f, ref Filter filter)
         {
-            var input = f.GetPlayerInput(0);
+            Input* input = default;
+            //플레이어 링크 컴포넌트를 가져와서 플레이어 입력을 가져옴           
+
+            //아래코드는 값을 읽을 때만 사용함
+            //PlayerLink p = f.Get<PlayerLink>(filter.Entity);
+
+            //Unsafe 문법..
+            //컴포넌트의 값을 변경하고 싶을때는 포인터로 받아와야 함
+            //값을 참조할때도 포인터 참조 문법(->)을 사용해야 함
+
+            //퀀텀은 희소집합 ECS를 사용하므로, TryGetPointer 시간 복잡도가 O(1)이라서 굉장이 빠름
+            if (f.Unsafe.TryGetPointer(filter.Entity, out PlayerLink* playerLink))
+            {
+                input = f.GetPlayerInput(playerLink->PlayerRef);
+            }            
             
             UpdateShipMovement(f, ref filter, input);
         }
